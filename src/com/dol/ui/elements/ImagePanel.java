@@ -22,7 +22,7 @@ public class ImagePanel extends JPanel {
         Image image = null;
 
         try {
-            image = ImageIO.read(new File("resources\\map1.jpg"));
+            image = ImageIO.read(new File("resources" + File.separator + "map1.jpg"));
         } catch (IOException e) {
             System.out.println("Файл map1.jpg не найден");
             System.exit(1);
