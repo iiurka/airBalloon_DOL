@@ -1,54 +1,66 @@
 package com.dol.ui.elements;
 
+import com.dol.ui.util.ImagePanelObserver;
+
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
-public class ContextMenu extends MouseAdapter {
+public class ContextMenu extends JPopupMenu {
 
-    JFrame frame;
-    JPopupMenu popupMenu = new JPopupMenu();
+    private boolean pressedOnA = false;
+    private boolean pressedOnB = false;
+    private boolean pressedOnStart = false;
 
-    public ContextMenu(JFrame frame) {
-
-        this.frame = frame;
+    public ContextMenu(JFrame frame, ImagePanelObserver imageObserver) {
 
         JMenuItem itemStart = new JMenuItem("Start flight");
         JMenuItem itemSpeed = new JMenuItem("Change air balloon speed");
+        JMenuItem itemSetPoint = new JMenuItem("Set point A");
 
         //TODO: добавить вызов метода полёта шара из бэкенда
-        itemStart.addActionListener(e -> {});
+        itemStart.addActionListener(e -> pressedOnStart = true);
         itemSpeed.addActionListener(e -> new SpeedControllerWindow(frame).setVisible(true));
 
-        frame.addMouseListener(this);
+        itemSetPoint.addActionListener(e -> {
+            if (!pressedOnA && !pressedOnB) {
+                pressedOnA = true;
+                itemSetPoint.setText("Set point B");
+            } else if (pressedOnA) {
 
-        popupMenu.add(itemStart);
-        popupMenu.add(itemSpeed);
+                if (imageObserver.getPointA().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Select point A", "Warning!", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                pressedOnA = false;
+                pressedOnB = true;
+                itemSetPoint.setText("Done");
+            } else {
+
+                if (imageObserver.getPointB().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Select point B", "Warning!", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                pressedOnB = false;
+                itemSetPoint.setText("Set point A");
+            }
+        });
+
+        add(itemStart);
+        add(itemSetPoint);
+        add(new Separator());
+        add(itemSpeed);
     }
 
-    /**
-     * Invoked when a mouse button has been pressed on a component.
-     *
-     * @param e the event to be processed
-     */
-    @Override
-    public void mousePressed(MouseEvent e) {
-        if (e.isPopupTrigger())
-            popupMenu.show(e.getComponent(), e.getX(), e.getY());
+    public boolean isPressedOnA() {
+        return pressedOnA;
     }
 
-    /**
-     * Invoked when a mouse button has been released on a component.
-     *
-     * @param e the event to be processed
-     */
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        if (e.isPopupTrigger())
-            popupMenu.show(e.getComponent(), e.getX(), e.getY());
+    public boolean isPressedOnB() {
+        return pressedOnB;
     }
 
-    public static JPopupMenu getPopupMenu(JFrame frame) {
-        return new ContextMenu(frame).popupMenu;
+    public boolean isPressedOnStart() {
+        return pressedOnStart;
     }
 }
