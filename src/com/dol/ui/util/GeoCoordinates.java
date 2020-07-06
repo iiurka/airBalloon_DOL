@@ -2,7 +2,7 @@ package com.dol.ui.util;
 
 public class GeoCoordinates {
 
-    Integer x = null;
+    int x;
     int y;
 
     double longitude;
@@ -12,8 +12,12 @@ public class GeoCoordinates {
 
     public GeoCoordinates(Integer x, int y, int width, int height) {
 
-        if (x < 0 || y < 0 || width < 0 || height < 0)
+        if (x < 0 || y < 0)
             throw new IllegalArgumentException("Illegal 2d vector: (" + x + "; " + y + ")");
+
+        if (width < 0 || height < 0)
+            throw new IllegalArgumentException("Illegal size of map");
+
 
         this.x = x;
         this.y = y;
@@ -36,13 +40,5 @@ public class GeoCoordinates {
 
     public double[] getGeographicCoords() {
         return new double[] {longitude, latitude};
-    }
-
-    public void clear() {
-        x = null;
-    }
-
-    public boolean isEmpty() {
-        return x == null;
     }
 }

@@ -68,8 +68,7 @@ public class ImagePanel extends JPanel
         getGraphics().drawImage(imagePoint, x, y, 25, 50, null);
     }
 
-    private void deletePoint(GeoCoordinates point) {
-        point.clear();
+    private void clearMap() {
         paintComponent(getGraphics());
     }
 
@@ -86,8 +85,8 @@ public class ImagePanel extends JPanel
 
         if (contextMenu.isPressedOnA()) {
 
-            if (!pointA.isEmpty())
-                deletePoint(pointA);
+            if (pointA != null)
+                clearMap();
 
             pointA = point;
 
@@ -95,8 +94,8 @@ public class ImagePanel extends JPanel
 
         } else if (contextMenu.isPressedOnB()) {
 
-            if (!pointB.isEmpty())
-                deletePoint(pointB);
+            if (pointB != null)
+                clearMap();
 
             pointB = point;
 
@@ -104,8 +103,8 @@ public class ImagePanel extends JPanel
             paintPoint(e.getX(), e.getY(), imagePointB);
 
         } else if (contextMenu.isPressedOnStart()) {
-            pointA.clear();
-            pointB.clear();
+            pointA = null;
+            pointB = null;
         }
     }
 
