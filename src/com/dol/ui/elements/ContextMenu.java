@@ -26,7 +26,7 @@ public class ContextMenu extends JPopupMenu {
                 itemSetPoint.setText("Set point B");
             } else if (pressedOnA) {
 
-                if (imageObserver.getPointA() == null) {
+                if (imageObserver.getPointA().isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Select point A", "Warning!", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
@@ -36,7 +36,7 @@ public class ContextMenu extends JPopupMenu {
                 itemSetPoint.setText("Done");
             } else {
 
-                if (imageObserver.getPointB() == null) {
+                if (imageObserver.getPointB().isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Select point B", "Warning!", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
