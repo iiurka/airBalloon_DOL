@@ -27,6 +27,8 @@ public class Way implements Comparable<Way> {
 
     public Coordinates getCoordinates() {return this.c; }
 
+    public long getTime() { return this.time; }
+
 
     @Override
     public int compareTo(Way way) {
@@ -45,7 +47,7 @@ public class Way implements Comparable<Way> {
         Way way = (Way) o;
         return Double.compare(way.rough, rough) == 0 &&
                 time == way.time &&
-                Objects.equals(c, way.c);
+                c.equals(way.c);
     }
 
     @Override
