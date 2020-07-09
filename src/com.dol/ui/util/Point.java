@@ -28,8 +28,8 @@ public class Point {
         this.coordinates = coordinates;
     }
 
-    public void move(int x, int y, int width, int height) {
-        coordinates = new GeoCoordinates(x, y, width, height);
+    public void move(int x, int y, int width, int height, Region region) {
+        coordinates = new GeoCoordinates(x, y, width, height, region);
     }
 
     public int getX() {

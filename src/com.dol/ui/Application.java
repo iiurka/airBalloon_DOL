@@ -12,21 +12,21 @@ import java.io.File;
 
 public class Application extends JFrame {
 
-    private ImagePanel mapPanel;
     final int width = 1280;
-    final int height = 800;
+    final int height = 900;
 
     Application() {
 
         super("DOL Balloon");
         setSize(width, height);
-
         setIconImage(new ImageIcon("resources" + File.separator + "icon.png").getImage());
-        JPanel mainPanel = new JPanel(new BorderLayout());
 
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        ImagePanel mapPanel;
+        ToolBar toolBar;
         JPanel statusBar = new JPanel();
+
         statusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        mainPanel.add(statusBar, BorderLayout.SOUTH);
         statusBar.setPreferredSize(new Dimension(width, 16));
         statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
         JLabel statusLabel = new JLabel();
@@ -34,17 +34,21 @@ public class Application extends JFrame {
         statusBar.add(statusLabel);
 
         try {
-            mapPanel = new ImagePanel(this, statusLabel);
+            toolBar = new ToolBar();
+            mapPanel = new ImagePanel(this, toolBar, statusLabel);
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
+            return;
         }
 
         rootPane.setContentPane(mainPanel);
-        mainPanel.add(mapPanel, BorderLayout.CENTER);
-        mainPanel.add(new ToolBar(), BorderLayout.NORTH);
+        add(toolBar, BorderLayout.NORTH);
+        add(mapPanel, BorderLayout.CENTER);
+        add(statusBar, BorderLayout.SOUTH);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
         setVisible(true);
     }
 

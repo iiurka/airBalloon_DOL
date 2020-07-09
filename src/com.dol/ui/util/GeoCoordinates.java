@@ -8,7 +8,7 @@ public class GeoCoordinates {
     double longitude;
     double latitude;
 
-    public GeoCoordinates(int x, int y, int width, int height) {
+    public GeoCoordinates(int x, int y, int width, int height, Region region) {
 
         if (x < 0 || y < 0)
             throw new IllegalArgumentException("Illegal 2d vector: (" + x + "; " + y + ")");
@@ -16,19 +16,21 @@ public class GeoCoordinates {
         if (width < 0 || height < 0)
             throw new IllegalArgumentException("Illegal size of map");
 
-
         this.x = x;
         this.y = y;
 
-        double longitude = (x - (double) width / 2) / width * 360;
-        double latitude = -(y - (double) height / 2) / height * 180;
+        switch (region) {
 
-        if (longitude > 180.0) {
-            longitude -= 360.0;
+            case WORLD -> {
+                longitude = (x - (double) width / 2) / width * 360;
+                latitude = -(y - (double) height / 2) / height * 180;
+            }
+
+            case EUROPE -> {
+                longitude = -25 + (double) (x) / width * 75;
+                latitude = 71 + (double) (-y) / height * 36;
+            }
         }
-
-        this.longitude = longitude;
-        this.latitude = latitude;
     }
 
     public int getX() {

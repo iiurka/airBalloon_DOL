@@ -17,4 +17,12 @@ public class ImagePanelObserver {
     public Point getPointB() {
         return panel.getPointB();
     }
+
+    public void setWorldRegion() {
+        panel.setWorldRegion();
+    }
+
+    public void openSpeedControllerWindow() {
+        panel.openSpeedControllerWindow();
+    }
 }
