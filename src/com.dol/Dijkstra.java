@@ -6,26 +6,20 @@ public class Dijkstra {
     Set<Coordinates> A; // мно-во не посещенных вершин
     Set<Coordinates> B; // мно-во посещенных вершин
 
-    Map<Coordinates, Double> minWay; // словарь кратчайщих путей
-    Map<Coordinates, Coordinates> parentCord;
-
-    LinkedList<Coordinates> list; // Тут хранится список координат, по которым будет лететь шар до цели
-
+    Map<Coordinates, Double> minWay; // словарь кротчайщих путей
     PriorityQueue<Way> priorityQueue;
 
     public void dijkstra(Coordinates s){
         A = new HashSet<>();
         B = new HashSet<>();
         minWay = new HashMap<>();
-        parentCord = new HashMap<>();
         priorityQueue = new PriorityQueue<>();
 
-        for (int la = 350; la <= 710; la++) { // вот тут задается карта la - latitude(широта)
-            for (int lo = -250; lo <= 500; lo++) { // lo - longitude(долгота)
+        for (int la = 500; la <= 600; la++) { // вот тут задается карта la - latitude(широта)
+            for (int lo = 800; lo <= 900; lo++) { // lo - longitude(долгота)
                 Coordinates a = new Coordinates(la, lo);
                 A.add(a); // Множества не посещенных вершин
                 minWay.put(a, Double.MAX_VALUE); // Минимальное расстояние до координат
-                parentCord.put(a, null);
             }
         }
 
@@ -40,7 +34,7 @@ public class Dijkstra {
         }
 
 
-        Coordinates to = new Coordinates(501, 107); // Здесь выбирать куда долетели
+        Coordinates to = new Coordinates(540, 825); // Здесь выбирать куда долетели
         System.out.print("Dijkstra: ");
         System.out.println(minWay.get(to));
         System.out.print("distanceFormula: "); // Это вот там формула, из учебника по географии
@@ -72,15 +66,15 @@ public class Dijkstra {
                 double newR = r + distanceFormula(s, newS);
                 if ((oldR > newR)) { // Если новый путь, короче уже известного, то добавляем координаты в очередь и меняем минимальный путь, в противном случае вершина опять идет нахуй
                     minWay.replace(newS, newR);
-                    parentCord.replace(newS, s);
                     priorityQueue.add(new Way(newS, newR, 0));
                 }
             }
         }
+
     }
 
     private Coordinates adjCoordinates(int la, int lo) {
-        if (la >= 350 && la <= 710 && -250 <= lo && lo <= 500) {
+        if (la >= 500 && la <= 600 && 800 <= lo && lo <= 900) {
             return new Coordinates(la, lo);
         }
         return null;
@@ -111,20 +105,6 @@ public class Dijkstra {
     private double haverSinus(double x) {
         return Math.pow(Math.sin(x/2.0),2);
     }
-
-    public LinkedList<Coordinates> getWayFromCoordinates(Coordinates b) {
-         list = new LinkedList<>();
-
-         Coordinates c = b;
-        list.addFirst(c);
-         while ((c = parentCord.get(c)) != null) {
-             list.addFirst(c);
-         }
-
-         return list;
-    }
-
-
 }
 
 
