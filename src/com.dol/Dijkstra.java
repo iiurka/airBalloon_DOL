@@ -6,7 +6,7 @@ public class Dijkstra {
     Set<Coordinates> A; // мно-во не посещенных вершин
     Set<Coordinates> B; // мно-во посещенных вершин
 
-    Map<Coordinates, Double> minWay; // словарь кротчайщих путей
+    Map<Coordinates, Double> minWay; // словарь кратчайщих путей
     PriorityQueue<Way> priorityQueue;
 
     public void dijkstra(Coordinates s){
