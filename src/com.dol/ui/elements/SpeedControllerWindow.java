@@ -14,16 +14,17 @@ public class SpeedControllerWindow extends JDialog {
 
         setLayout(new BorderLayout());
         setSize(500, 150);
+        setResizable(false);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
         slider = new JSlider();
         add(slider, BorderLayout.CENTER);
 
         slider.setValue(currentSpeed);
-        slider.setMaximum(240);
-        slider.setMajorTickSpacing(24);
-        slider.setMinorTickSpacing(12);
-        slider.setLabelTable(slider.createStandardLabels(24));
+        slider.setMaximum(50);
+        slider.setMajorTickSpacing(10);
+        slider.setMinorTickSpacing(5);
+        slider.setLabelTable(slider.createStandardLabels(10));
         slider.setPaintLabels(true);
         slider.setPaintTicks(true);
 

@@ -16,7 +16,6 @@ public class ContextMenu extends JPopupMenu {
         JMenuItem itemSpeed = new JMenuItem("Change air balloon speed");
         JMenuItem itemSetPoint = new JMenuItem("Set point A");
 
-        //TODO: добавить вызов метода полёта шара из бэкенда
         itemStart.addActionListener(e -> pressedOnStart = true);
         itemSpeed.addActionListener(e -> new SpeedControllerWindow(frame).setVisible(true));
 
@@ -26,7 +25,7 @@ public class ContextMenu extends JPopupMenu {
                 itemSetPoint.setText("Set point B");
             } else if (pressedOnA) {
 
-                if (imageObserver.getPointA().isEmpty()) {
+                if (!imageObserver.getPointA().isWorth()) {
                     JOptionPane.showMessageDialog(this, "Select point A", "Warning!", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
@@ -36,7 +35,7 @@ public class ContextMenu extends JPopupMenu {
                 itemSetPoint.setText("Done");
             } else {
 
-                if (imageObserver.getPointB().isEmpty()) {
+                if (!imageObserver.getPointB().isWorth()) {
                     JOptionPane.showMessageDialog(this, "Select point B", "Warning!", JOptionPane.WARNING_MESSAGE);
                     return;
                 }

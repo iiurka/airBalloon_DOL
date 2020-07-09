@@ -10,11 +10,11 @@ public class ImagePanelObserver {
         this.panel = panel;
     }
 
-    public GeoCoordinates getPointA() {
+    public Point getPointA() {
         return panel.getPointA();
     }
 
-    public GeoCoordinates getPointB() {
+    public Point getPointB() {
         return panel.getPointB();
     }
 }

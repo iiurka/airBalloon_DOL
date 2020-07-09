@@ -1,11 +1,11 @@
 package com.dol.ui;
 
 import com.dol.ui.elements.ImagePanel;
+import com.dol.ui.elements.ToolBar;
 import com.dol.ui.exceptions.FileNotFoundException;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.io.File;
 
@@ -13,12 +13,14 @@ import java.io.File;
 public class Application extends JFrame {
 
     private ImagePanel mapPanel;
-    final int width = 1778;
-    final int height = 1000;
+    final int width = 1280;
+    final int height = 800;
 
     Application() {
 
         super("DOL Balloon");
+        setSize(width, height);
+
         setIconImage(new ImageIcon("resources" + File.separator + "icon.png").getImage());
         JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -27,7 +29,7 @@ public class Application extends JFrame {
         mainPanel.add(statusBar, BorderLayout.SOUTH);
         statusBar.setPreferredSize(new Dimension(width, 16));
         statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
-        JLabel statusLabel = new JLabel("");
+        JLabel statusLabel = new JLabel();
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
         statusBar.add(statusLabel);
 
@@ -40,11 +42,9 @@ public class Application extends JFrame {
 
         rootPane.setContentPane(mainPanel);
         mainPanel.add(mapPanel, BorderLayout.CENTER);
+        mainPanel.add(new ToolBar(), BorderLayout.NORTH);
 
-
-        setSize(width, height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
         setVisible(true);
     }
 
