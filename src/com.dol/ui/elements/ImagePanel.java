@@ -3,7 +3,9 @@ package com.dol.ui.elements;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -11,7 +13,6 @@ import javax.imageio.ImageIO;
 import com.dol.ui.exceptions.FileNotFoundException;
 import com.dol.ui.util.GeoCoordinates;
 import com.dol.ui.util.ImagePanelObserver;
-import com.dol.ui.util.Point;
 
 public class ImagePanel extends JPanel
                         implements MouseListener, MouseMotionListener {
@@ -21,55 +22,36 @@ public class ImagePanel extends JPanel
     private final ContextMenu contextMenu;
 
     private final Image imageMap;
+    private final Image imagePointA;
+    private final Image imagePointB;
 
-    private int widthMap;
-    private int heightMap;
+    private GeoCoordinates pointA = new GeoCoordinates();
+    private GeoCoordinates pointB = new GeoCoordinates();
 
-    Point A;
-    Point B;
-
-    public ImagePanel(JFrame frame, JLabel statusBar) throws FileNotFoundException {
+    public ImagePanel(JFrame frame, JLabel statusBar) {
         this.frame = frame;
         this.statusBar = statusBar;
         contextMenu = new ContextMenu(frame, new ImagePanelObserver(this));
 
-        widthMap = frame.getWidth() - 16;
-        heightMap = frame.getHeight() - 54;
-
         addMouseListener(this);
         addMouseMotionListener(this);
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                if (A.isWorth()) {
-                    A.move(A.getX(), A.getY(), widthMap, heightMap);
-                    paintPoint(A);
-                }
-
-                if (B.isWorth()) {
-                    B.move(B.getX(), B.getY(), widthMap, heightMap);
-                    paintPoint(B);
-                }
-            }
-        });
-
         setComponentPopupMenu(contextMenu);
         add(getComponentPopupMenu());
 
         try {
-            imageMap = ImageIO.read(new File("resources" + File.separator + "world map.jpg"));
+            imageMap = ImageIO.read(new File("resources" + File.separator + "map4.jpg"));
         } catch (IOException e) {
-            throw new FileNotFoundException("File \"world map.jpg\" not found");
+            throw new FileNotFoundException("File \"map4.jpg\" not found");
         }
 
         try {
-            A = new Point(ImageIO.read(new File("resources" + File.separator + "point A.png")));
+            imagePointA = ImageIO.read(new File("resources" + File.separator + "point A.png"));
         } catch (IOException e) {
             throw new FileNotFoundException("File \"point A.png\" not found");
         }
 
         try {
-            B = new Point(ImageIO.read(new File("resources" + File.separator + "point B.png")));
+            imagePointB = ImageIO.read(new File("resources" + File.separator + "point B.png"));
         } catch (IOException e) {
             throw new FileNotFoundException("File \"point B.png\" not found");
         }
@@ -77,18 +59,17 @@ public class ImagePanel extends JPanel
 
     protected void paintComponent(Graphics g) {
         //выравнивание до пропорций исходного изображения
-        widthMap = frame.getWidth() - 16;
-        heightMap = frame.getHeight() - 54;
-        g.drawImage(imageMap, 0, 0, widthMap, heightMap, null);
+        g.drawImage(imageMap, 0, 0, frame.getWidth()-15, frame.getHeight()-54, null);
     }
 
-    private void paintPoint(Point point) {
-        if (!point.isWorth()) return;
-
-        getGraphics().drawImage(point.getImagePoint(), (int) (point.getX() - 12.5), point.getY() - 75, 50, 50, null);
+    private void paintPoint(int x, int y, Image imagePoint) {
+        y -= 49;
+        x -= 12.5;
+        getGraphics().drawImage(imagePoint, x, y, 25, 50, null);
     }
 
-    private void clearMap() {
+    private void deletePoint(GeoCoordinates point) {
+        point.clear();
         paintComponent(getGraphics());
     }
 
@@ -101,37 +82,39 @@ public class ImagePanel extends JPanel
     @Override
     public void mouseClicked(MouseEvent e) {
 
-        GeoCoordinates point = new GeoCoordinates(e.getX(), e.getY(), widthMap, heightMap);
+        GeoCoordinates point = new GeoCoordinates(e.getX(), e.getY(), frame.getWidth(), frame.getHeight());
 
         if (contextMenu.isPressedOnA()) {
 
-            if (A.isWorth())
-                clearMap();
+            if (!pointA.isEmpty())
+                deletePoint(pointA);
 
-            A.move(point);
-            paintPoint(A);
+            pointA = point;
+
+            paintPoint(e.getX(), e.getY(), imagePointA);
 
         } else if (contextMenu.isPressedOnB()) {
 
-            if (B.isWorth())
-                clearMap();
+            if (!pointB.isEmpty())
+                deletePoint(pointB);
 
-            B.move(point);
-            paintPoint(A);
-            paintPoint(B);
+            pointB = point;
+
+            paintPoint(pointA.getCartesianCoords()[0], pointA.getCartesianCoords()[1], imagePointA);
+            paintPoint(e.getX(), e.getY(), imagePointB);
 
         } else if (contextMenu.isPressedOnStart()) {
-            A.deletePoint();
-            B.deletePoint();
+            pointA.clear();
+            pointB.clear();
         }
     }
 
-    public Point getPointA() {
-        return A;
+    public GeoCoordinates getPointA() {
+        return pointA;
     }
 
-    public Point getPointB() {
-        return B;
+    public GeoCoordinates getPointB() {
+        return pointB;
     }
 
     /**
@@ -143,8 +126,6 @@ public class ImagePanel extends JPanel
     public void mousePressed(MouseEvent e) {
         if (e.isPopupTrigger())
             getComponentPopupMenu().show(e.getComponent(), e.getX(), e.getY());
-        paintPoint(A);
-        paintPoint(B);
     }
 
     /**
@@ -156,8 +137,6 @@ public class ImagePanel extends JPanel
     public void mouseReleased(MouseEvent e) {
         if (e.isPopupTrigger())
             getComponentPopupMenu().show(e.getComponent(), e.getX(), e.getY());
-        paintPoint(A);
-        paintPoint(B);
     }
 
     /**
@@ -200,7 +179,7 @@ public class ImagePanel extends JPanel
      */
     @Override
     public void mouseMoved(MouseEvent e) {
-        GeoCoordinates point = new GeoCoordinates(e.getX(), e.getY(), widthMap, heightMap);
-        statusBar.setText(String.format("(%.2f; %.2f)", point.getLongitude(), point.getLatitude()));
+        GeoCoordinates point = new GeoCoordinates(e.getX(), e.getY(), frame.getWidth(), frame.getHeight());
+        statusBar.setText(String.format("(%.2f; %.2f)", point.getGeographicCoords()[0], point.getGeographicCoords()[1]));
     }
 }

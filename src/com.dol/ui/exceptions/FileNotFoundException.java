@@ -1,6 +1,6 @@
 package com.dol.ui.exceptions;
 
-public class FileNotFoundException extends Exception {
+public class FileNotFoundException extends RuntimeException {
 
     public FileNotFoundException() {
         super();

@@ -2,26 +2,25 @@ package com.dol.ui.util;
 
 public class GeoCoordinates {
 
-    int x;
+    Integer x = null;
     int y;
 
     double longitude;
     double latitude;
 
-    public GeoCoordinates(int x, int y, int width, int height) {
+    public GeoCoordinates() {}
 
-        if (x < 0 || y < 0)
+    public GeoCoordinates(Integer x, int y, int width, int height) {
+
+        if (x < 0 || y < 0 || width < 0 || height < 0)
             throw new IllegalArgumentException("Illegal 2d vector: (" + x + "; " + y + ")");
-
-        if (width < 0 || height < 0)
-            throw new IllegalArgumentException("Illegal size of map");
-
 
         this.x = x;
         this.y = y;
 
-        double longitude = (x - (double) width / 2) / width * 360;
-        double latitude = -(y - (double) height / 2) / height * 180;
+        //выравнивание по нулевой меридиане
+        double longitude = (x - (double) width / 2 + 10) / (width - 15) * 360;
+        double latitude = -(y - (double) (height - 54) / 2) / (height - 54) * 180;
 
         if (longitude > 180.0) {
             longitude -= 360.0;
@@ -31,19 +30,19 @@ public class GeoCoordinates {
         this.latitude = latitude;
     }
 
-    public int getX() {
-        return x;
+    public int[] getCartesianCoords() {
+        return new int[] {x, y};
     }
 
-    public int getY() {
-        return y;
+    public double[] getGeographicCoords() {
+        return new double[] {longitude, latitude};
     }
 
-    public double getLongitude() {
-        return longitude;
+    public void clear() {
+        x = null;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public boolean isEmpty() {
+        return x == null;
     }
 }
