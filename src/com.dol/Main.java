@@ -1,10 +1,12 @@
 package com.dol;
 
 
+import java.lang.reflect.Field;
 import java.util.LinkedList;
 
 public class Main {
     public static void main(String[] args) {
+
         Dijkstra dij = new Dijkstra();
 
         Coordinates from = new Coordinates(600, 400);
