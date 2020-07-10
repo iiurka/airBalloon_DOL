@@ -145,7 +145,16 @@ public class ImagePanel extends JPanel
         Coordinates[] result = new Coordinates[temp.size()];
         temp.toArray(result);
 
+        int currLine = 7;
+        boolean toPaint = true;
+
         for (int i = 2; i < result.length; i++) {
+
+            if (i > currLine) {
+                toPaint = !toPaint;
+                currLine += 5;
+            }
+            if (!toPaint) continue;
 
             Coordinates prev = result[i-1];
             Coordinates curr = result[i];
