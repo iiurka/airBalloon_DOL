@@ -5,8 +5,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import javax.imageio.ImageIO;
 
+import com.dol.Coordinates;
+import com.dol.Dijkstra;
 import com.dol.ui.exceptions.FileNotFoundException;
 import com.dol.ui.util.GeoCoordinates;
 import com.dol.ui.util.ImagePanelObserver;
@@ -39,10 +42,6 @@ public class ImagePanel extends JPanel
         toolBar.observer = new ImagePanelObserver(this);
         this.toolBar = toolBar;
         this.statusBar = statusBar;
-
-        //ContextMenu contextMenu = new ContextMenu(frame, new ImagePanelObserver(this));
-        //setComponentPopupMenu(contextMenu);
-        //add(getComponentPopupMenu());
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -88,7 +87,7 @@ public class ImagePanel extends JPanel
 
     private void paintPoint(Point point) {
         if (!point.isWorth()) return;
-        getGraphics().drawImage(point.getImagePoint(), point.getX() - 13, point.getY() - 41, 26, 42, null);
+        getGraphics().drawImage(point.getImagePoint(), point.getX() - 25, point.getY() - 50, 50, 50, null);
     }
 
     private void clearMap() {
@@ -103,18 +102,68 @@ public class ImagePanel extends JPanel
         return B;
     }
 
+    public Region getRegion() {
+        return region;
+    }
+
     public void openSpeedControllerWindow() {
         new SpeedControllerWindow(frame).setVisible(true);
     }
 
     public void setWorldRegion() {
+        A.deletePoint();
+        B.deletePoint();
         region = Region.WORLD;
         currMap = worldMap;
         paintComponent(getGraphics());
     }
 
     public void run() {
-        //TODO: добавить вызов метода полёта шара из бэкенда
+
+        if (currMap.equals(worldMap)) {
+            JOptionPane.showMessageDialog(frame, "Please select a region!", "Warning!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (!A.isWorth()) {
+            JOptionPane.showMessageDialog(frame, "Please select a departure point!", "Warning!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (!B.isWorth()) {
+            JOptionPane.showMessageDialog(frame, "Please select an arrival point!", "Warning!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Coordinates from = new Coordinates((int) (A.getLatitude() * 10), (int) (A.getLongitude() * 10));
+        Coordinates to = new Coordinates((int) (B.getLatitude() * 10), (int) (B.getLongitude() * 10));
+
+
+        Dijkstra algorithm = new Dijkstra();
+        algorithm.dijkstra(from);
+        LinkedList <Coordinates> temp = algorithm.getWayFromCoordinates(to);
+        Coordinates[] result = new Coordinates[temp.size()];
+        temp.toArray(result);
+
+        for (int i = 2; i < result.length; i++) {
+
+            Coordinates prev = result[i-1];
+            Coordinates curr = result[i];
+
+            int prevX = (int) ((prev.getLo() / 10.0 + 25) * widthMap / 75);
+            int prevY = (int) ((71 - prev.getLa() / 10.0) * heightMap / 36);
+
+            int currX = (int) ((curr.getLo() / 10.0 + 25) * widthMap / 75);
+            int currY = (int) ((71 - curr.getLa() / 10.0) * heightMap / 36);
+
+            Graphics2D g = (Graphics2D) getGraphics();
+            g.setColor(Color.RED);
+            g.setStroke(new BasicStroke(2));
+            g.drawLine(prevX, prevY, currX, currY);
+        }
+
+        paintPoint(A);
+        paintPoint(B);
     }
 
     @Override
@@ -130,7 +179,13 @@ public class ImagePanel extends JPanel
 
                 toolBar.resetPressedAction();
                 paintComponent(getGraphics());
+            } else {
+                if (toolBar.getPressedAction() == ToolBar.Action.SET_A || toolBar.getPressedAction() == ToolBar.Action.SET_B) {
+                    JOptionPane.showMessageDialog(frame, "Please select a region!", "Warning!", JOptionPane.WARNING_MESSAGE);
+                    toolBar.resetPressedAction();
+                }
             }
+
             return;
         }
 
@@ -189,8 +244,8 @@ public class ImagePanel extends JPanel
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        GeoCoordinates point = new GeoCoordinates(e.getX(), e.getY(), widthMap, heightMap, region);
 
+        GeoCoordinates point = new GeoCoordinates(e.getX(), e.getY(), widthMap, heightMap, region);
 
         if (region == Region.WORLD) {
             if (-25 < point.getLongitude() && point.getLongitude() < 50 &&
@@ -204,7 +259,6 @@ public class ImagePanel extends JPanel
                 paintComponent(getGraphics());
             }
         }
-
         statusBar.setText(String.format("(%.2f; %.2f)", point.getLongitude(), point.getLatitude()));
     }
 }

@@ -18,7 +18,7 @@ public class Way implements Comparable<Way> {
     }
 
     public int getLo() {
-        return c.getLa();
+        return c.getLo();
     }
 
     public double getRough() {

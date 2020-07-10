@@ -18,6 +18,14 @@ public class ImagePanelObserver {
         return panel.getPointB();
     }
 
+    public Region getRegion() {
+        return panel.getRegion();
+    }
+
+    public void run() {
+        panel.run();
+    }
+
     public void setWorldRegion() {
         panel.setWorldRegion();
     }

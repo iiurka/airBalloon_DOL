@@ -53,34 +53,34 @@ public class ToolBar extends JToolBar {
     class RunAction extends AbstractAction  {
 
         public RunAction() {
-            BufferedImage img;
+            BufferedImage image;
             try {
-                img = ImageIO.read(new File("resources" + File.separator + "air-balloon.png"));
+                image = ImageIO.read(new File("resources" + File.separator + "air-balloon.png"));
             } catch (IOException e) {
                 throw new FileNotFoundException("File \"air-balloon.png\" not found");
             }
 
-            ImageIcon icon = new ImageIcon(img.getScaledInstance(widthAction, heightAction, Image.SCALE_SMOOTH));
+            ImageIcon icon = new ImageIcon(image.getScaledInstance(widthAction, heightAction, Image.SCALE_SMOOTH));
             putValue(AbstractAction.SMALL_ICON, icon);
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            observer.run();
         }
     }
 
     class SetPointAAction extends AbstractAction {
 
         public SetPointAAction() {
-            BufferedImage img;
+            BufferedImage image;
             try {
-                img = ImageIO.read(new File("resources" + File.separator + "A.png"));
+                image = ImageIO.read(new File("resources" + File.separator + "A.png"));
             } catch (IOException e) {
                 throw new FileNotFoundException("File \"A.png\" not found");
             }
 
-            ImageIcon icon = new ImageIcon(img.getScaledInstance(widthAction, heightAction, Image.SCALE_SMOOTH));
+            ImageIcon icon = new ImageIcon(image.getScaledInstance(widthAction, heightAction, Image.SCALE_SMOOTH));
             putValue(AbstractAction.SMALL_ICON, icon);
         }
 
@@ -93,14 +93,14 @@ public class ToolBar extends JToolBar {
     class SetPointBAction extends AbstractAction {
 
         public SetPointBAction() {
-            BufferedImage img;
+            BufferedImage image;
             try {
-                img = ImageIO.read(new File("resources" + File.separator + "B.png"));
+                image = ImageIO.read(new File("resources" + File.separator + "B.png"));
             } catch (IOException e) {
                 throw new FileNotFoundException("File \"B.png\" not found");
             }
 
-            ImageIcon icon = new ImageIcon(img.getScaledInstance(widthAction, heightAction, Image.SCALE_SMOOTH));
+            ImageIcon icon = new ImageIcon(image.getScaledInstance(widthAction, heightAction, Image.SCALE_SMOOTH));
             putValue(AbstractAction.SMALL_ICON, icon);
         }
 
@@ -113,14 +113,14 @@ public class ToolBar extends JToolBar {
     class SpeedControllerAction extends AbstractAction {
 
         public SpeedControllerAction() {
-            BufferedImage img;
+            BufferedImage image;
             try {
-                img = ImageIO.read(new File("resources" + File.separator + "speed.png"));
+                image = ImageIO.read(new File("resources" + File.separator + "speed.png"));
             } catch (IOException e) {
                 throw new FileNotFoundException("File \"speed.png\" not found");
             }
 
-            ImageIcon icon = new ImageIcon(img.getScaledInstance(widthAction, heightAction, Image.SCALE_SMOOTH));
+            ImageIcon icon = new ImageIcon(image.getScaledInstance(widthAction, heightAction, Image.SCALE_SMOOTH));
             putValue(AbstractAction.SMALL_ICON, icon);
         }
 
@@ -133,14 +133,14 @@ public class ToolBar extends JToolBar {
     class ParentRegionAction extends AbstractAction {
 
         public ParentRegionAction() {
-            BufferedImage img;
+            BufferedImage image;
             try {
-                img = ImageIO.read(new File("resources" + File.separator + "world icon.png"));
+                image = ImageIO.read(new File("resources" + File.separator + "world icon.png"));
             } catch (IOException e) {
                 throw new FileNotFoundException("File \"world icon.png\" not found");
             }
 
-            ImageIcon icon = new ImageIcon(img.getScaledInstance(widthAction, heightAction, Image.SCALE_SMOOTH));
+            ImageIcon icon = new ImageIcon(image.getScaledInstance(widthAction, heightAction, Image.SCALE_SMOOTH));
             putValue(AbstractAction.SMALL_ICON, icon);
         }
 
