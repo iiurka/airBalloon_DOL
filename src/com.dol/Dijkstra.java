@@ -25,6 +25,7 @@ public class Dijkstra {
         A = new HashSet<>();
         B = new HashSet<>();
         minWay = new HashMap<>();
+        windMap = new HashMap<>();
         parentCord = new HashMap<>();
         priorityQueue = new PriorityQueue<>();
         this.speed = speed;
@@ -97,7 +98,7 @@ public class Dijkstra {
 
     private int[] setTimeOfFlight(Coordinates c) {
         Coordinates coordinates = new Coordinates(c.getLa()/10, c.getLo()/10);
-        Wind wind = null;
+        Wind wind;
 
         int[] resultingSpeed = new int[8];
 
@@ -107,16 +108,22 @@ public class Dijkstra {
             try {
                 JSONObject json = new JSONObject(IOUtils.toString(new URL(urlS), StandardCharsets.UTF_8));
                 JSONObject weatherOnTime = json.getJSONObject("data").getJSONArray("current_condition").getJSONObject(0);
-                wind = new Wind(weatherOnTime.getInt("windspeedKmph"), (weatherOnTime.getInt("winddirDegree")+180)%360);
+                int windDegree = (weatherOnTime.getInt("winddirDegree")+180)%360;
+                int windSpeed = weatherOnTime.getInt("windspeedKmph");
+                windDegree = 90-windDegree%90-90*(windDegree/90);
+                wind = new Wind(windSpeed, windDegree);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             windMap.put(coordinates, wind);
         }
 
+        wind.degree = 90-wind.degree%90-90*(wind.degree/90);
         for (int i = 0; i < 8; i++) {
-            int engineDegree = (int) Math.acos(wind.speed*Math.cos(Math.toRadians(wind.degree-45*i))/speed);
-            resultingSpeed[i] = (int) Math.sqrt(Math.pow(speed, 2)+Math.pow(wind.speed, 2)+2*speed*wind.speed*Math.cos(Math.toRadians(Math.abs(engineDegree+45*i-wind.degree))));
+            double windProjection = wind.speed*Math.cos(Math.toRadians(wind.degree+45*i));
+            double engineProjection = Math.sqrt(Math.pow(speed, 2) - Math.pow(windProjection, 2));
+            resultingSpeed[i] = (int) (engineProjection+wind.speed*Math.sin(Math.toRadians(wind.degree+45*i)));
+//            System.out.println(resultingSpeed[i]);
         }
         return resultingSpeed;
     }
