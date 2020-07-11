@@ -115,7 +115,7 @@ public class Dijkstra {
         }
 
         for (int i = 0; i < 8; i++) {
-            int engineDegree = (int) Math.acos(Math.toRadians(wind.speed*Math.cos(wind.degree)/speed-45*i));
+            int engineDegree = (int) Math.acos(wind.speed*Math.cos(Math.toRadians(wind.degree-45*i))/speed);
             resultingSpeed[i] = (int) Math.sqrt(Math.pow(speed, 2)+Math.pow(wind.speed, 2)+2*speed*wind.speed*Math.cos(Math.toRadians(Math.abs(engineDegree-wind.degree))));
         }
         return resultingSpeed;
