@@ -45,4 +45,3 @@ public class Way implements Comparable<Way> {
         return Objects.hash(c, distance, time);
     }
 }
-
