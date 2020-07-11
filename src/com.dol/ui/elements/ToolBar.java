@@ -146,7 +146,7 @@ public class ToolBar extends JToolBar {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            observer.setWorldRegion();
+            observer.setDefaultRegion();
         }
     }
 }

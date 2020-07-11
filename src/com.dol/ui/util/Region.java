@@ -1,6 +1,7 @@
 package com.dol.ui.util;
 
 public enum Region {
-    WORLD,
-    EUROPE
+    EUROPE,
+    BALTIC_SEA,
+    BLACK_SEA
 }

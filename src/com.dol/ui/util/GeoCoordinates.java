@@ -21,14 +21,19 @@ public class GeoCoordinates {
 
         switch (region) {
 
-            case WORLD -> {
-                longitude = (x - (double) width / 2) / width * 360;
-                latitude = -(y - (double) height / 2) / height * 180;
-            }
-
             case EUROPE -> {
                 longitude = -25 + (double) (x) / width * 75;
                 latitude = 71 + (double) (-y) / height * 36;
+            }
+
+            case BALTIC_SEA -> {
+                longitude = 5.3 + (double) (x) / width * 27.2;
+                latitude = 66.5 + (double) (-y) / height * 13.5;
+            }
+
+            case BLACK_SEA -> {
+                longitude = 25.3 + (double) (x) / width * 17.9;
+                latitude = 47.7 + (double) (-y) / height * 8.1;
             }
         }
     }
@@ -49,3 +54,12 @@ public class GeoCoordinates {
         return latitude;
     }
 }
+
+
+/*
+
+for (int i = 0; i < 8; i++) {
+    resultingSpeed[i] = wind.speed * Math.cos(Math.toRadians(wind.degree - 45 * i)) + speed;
+}
+
+ */

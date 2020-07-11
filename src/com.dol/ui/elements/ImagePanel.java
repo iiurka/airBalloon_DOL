@@ -23,12 +23,15 @@ public class ImagePanel extends JPanel
     private final ToolBar toolBar;
     private final JLabel statusBar;
 
-    private final Image worldMap;
     private final Image europeMap;
-    private final Image WMEurope;
+    private final Image balticSeaMap;
+    private final Image blackSeaMap;
+    private final Image EMBaltic;
+    private final Image EMBlack;
+
     private Image currMap;
 
-    private Region region = Region.WORLD;
+    private Region region = Region.EUROPE;
 
     private int widthMap;
     private int heightMap;
@@ -47,14 +50,8 @@ public class ImagePanel extends JPanel
         addMouseMotionListener(this);
 
         try {
-            worldMap = ImageIO.read(new File("resources" + File.separator + "world map.jpg"));
-            currMap = worldMap;
-        } catch (IOException e) {
-            throw new FileNotFoundException("File \"world map.jpg\" not found");
-        }
-
-        try {
             europeMap = ImageIO.read(new File("resources" + File.separator + "europe map.jpg"));
+            currMap = europeMap;
         } catch (IOException e) {
             throw new FileNotFoundException("File \"europe map.jpg\" not found");
         }
@@ -72,9 +69,27 @@ public class ImagePanel extends JPanel
         }
 
         try {
-            WMEurope = ImageIO.read(new File("resources" + File.separator + "WM with europe.jpg"));
+            balticSeaMap = ImageIO.read(new File("resources" + File.separator + "baltic sea.jpg"));
         } catch (IOException e) {
-            throw new FileNotFoundException("File \"WM with europe.jpg\" not found");
+            throw new FileNotFoundException("File \"baltic sea.jpg\" not found");
+        }
+
+        try {
+            blackSeaMap = ImageIO.read(new File("resources" + File.separator + "black sea.jpg"));
+        } catch (IOException e) {
+            throw new FileNotFoundException("File \"black sea.jpg\" not found");
+        }
+
+        try {
+            EMBaltic = ImageIO.read(new File("resources" + File.separator + "EM with baltic.jpg"));
+        } catch (IOException e) {
+            throw new FileNotFoundException("File \"EM with baltic.jpg\" not found");
+        }
+
+        try {
+            EMBlack = ImageIO.read(new File("resources" + File.separator + "EM with black.jpg"));
+        } catch (IOException e) {
+            throw new FileNotFoundException("File \"EM with black.jpg\" not found");
         }
     }
 
@@ -110,17 +125,17 @@ public class ImagePanel extends JPanel
         new SpeedControllerWindow(frame).setVisible(true);
     }
 
-    public void setWorldRegion() {
+    public void setDefaultRegion() {
         A.deletePoint();
         B.deletePoint();
-        region = Region.WORLD;
-        currMap = worldMap;
+        region = Region.EUROPE;
+        currMap = europeMap;
         paintComponent(getGraphics());
     }
 
     public void run() {
 
-        if (currMap.equals(worldMap)) {
+        if (currMap.equals(europeMap)) {
             JOptionPane.showMessageDialog(frame, "Please select a region!", "Warning!", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -145,14 +160,15 @@ public class ImagePanel extends JPanel
         Coordinates[] result = new Coordinates[temp.size()];
         temp.toArray(result);
 
-        int currLine = 7;
+        int k = 5;
+        int currLine = 2 + k;
         boolean toPaint = true;
 
         for (int i = 2; i < result.length; i++) {
 
             if (i > currLine) {
                 toPaint = !toPaint;
-                currLine += 5;
+                currLine += k;
             }
             if (!toPaint) continue;
 
@@ -180,14 +196,27 @@ public class ImagePanel extends JPanel
 
         GeoCoordinates point = new GeoCoordinates(e.getX(), e.getY(), widthMap, heightMap, region);
 
-        if (region == Region.WORLD) {
-            if (-25 < point.getLongitude() && point.getLongitude() < 50 &&
-                    35 < point.getLatitude() && point.getLatitude() < 71) {
-                region = Region.EUROPE;
-                currMap = europeMap;
+        if (region == Region.EUROPE) {
+
+
+            if (5.3 < point.getLongitude() && point.getLongitude() < 32.5 &&
+                    53 < point.getLatitude() && point.getLatitude() < 66.5 ) {
+
+                region = Region.BALTIC_SEA;
+                currMap = balticSeaMap;
 
                 toolBar.resetPressedAction();
                 paintComponent(getGraphics());
+
+            } else if (25.3 < point.getLongitude() && point.getLongitude() < 43.2 &&
+                    39.6 < point.getLatitude() && point.getLatitude() < 47.7 ) {
+
+                region = Region.BLACK_SEA;
+                currMap = blackSeaMap;
+
+                toolBar.resetPressedAction();
+                paintComponent(getGraphics());
+
             } else {
                 if (toolBar.getPressedAction() == ToolBar.Action.SET_A || toolBar.getPressedAction() == ToolBar.Action.SET_B) {
                     JOptionPane.showMessageDialog(frame, "Please select a region!", "Warning!", JOptionPane.WARNING_MESSAGE);
@@ -197,7 +226,6 @@ public class ImagePanel extends JPanel
 
             return;
         }
-
 
         switch (toolBar.getPressedAction()) {
 
@@ -225,22 +253,10 @@ public class ImagePanel extends JPanel
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-        //if (e.isPopupTrigger())
-            //getComponentPopupMenu().show(e.getComponent(), e.getX(), e.getY());
-
-        //paintPoint(A);
-        //paintPoint(B);
-    }
+    public void mousePressed(MouseEvent e) {}
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-        //if (e.isPopupTrigger())
-            //getComponentPopupMenu().show(e.getComponent(), e.getX(), e.getY());
-
-        //paintPoint(A);
-        //paintPoint(B);
-    }
+    public void mouseReleased(MouseEvent e) {}
 
     @Override
     public void mouseEntered(MouseEvent e) {}
@@ -256,15 +272,25 @@ public class ImagePanel extends JPanel
 
         GeoCoordinates point = new GeoCoordinates(e.getX(), e.getY(), widthMap, heightMap, region);
 
-        if (region == Region.WORLD) {
-            if (-25 < point.getLongitude() && point.getLongitude() < 50 &&
-                    35 < point.getLatitude() && point.getLatitude() < 71 ) {
-                if (!currMap.equals(WMEurope)) {
-                    currMap = WMEurope;
+        if (region == Region.EUROPE) {
+            if (5.3 < point.getLongitude() && point.getLongitude() < 32.5 &&
+                  53 < point.getLatitude() && point.getLatitude() < 66.5 ) {
+
+                if (!currMap.equals(EMBaltic)) {
+                    currMap = EMBaltic;
                     paintComponent(getGraphics());
                 }
-            } else if (!currMap.equals(worldMap)) {
-                currMap = worldMap;
+
+            } else if (25.3 < point.getLongitude() && point.getLongitude() < 43.2 &&
+                        39.6 < point.getLatitude() && point.getLatitude() < 47.7 ) {
+
+                if (!currMap.equals(EMBlack)) {
+                    currMap = EMBlack;
+                    paintComponent(getGraphics());
+                }
+
+            } else if (!currMap.equals(europeMap)) {
+                currMap = europeMap;
                 paintComponent(getGraphics());
             }
         }

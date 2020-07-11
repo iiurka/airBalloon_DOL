@@ -26,8 +26,8 @@ public class ImagePanelObserver {
         panel.run();
     }
 
-    public void setWorldRegion() {
-        panel.setWorldRegion();
+    public void setDefaultRegion() {
+        panel.setDefaultRegion();
     }
 
     public void openSpeedControllerWindow() {
