@@ -107,17 +107,17 @@ public class Dijkstra {
             try {
                 JSONObject json = new JSONObject(IOUtils.toString(new URL(urlS), StandardCharsets.UTF_8));
                 JSONObject weatherOnTime = json.getJSONObject("data").getJSONArray("current_condition").getJSONObject(0);
-                wind = new Wind(weatherOnTime.getInt("windspeedKmph"), weatherOnTime.getInt("winddirDegree"));
+                wind = new Wind(weatherOnTime.getInt("windspeedKmph"), (weatherOnTime.getInt("winddirDegree")+180)%360);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             windMap.put(coordinates, wind);
         }
 
-//        for (int i = 0; i < 8; i++) {
-//            int shift =
-//            int resDegree =
-//        }
+        for (int i = 0; i < 8; i++) {
+            int engineDegree = (int) Math.acos(Math.toRadians(wind.speed*Math.cos(wind.degree)/speed-45*i));
+            resultingSpeed[i] = (int) Math.sqrt(Math.pow(speed, 2)+Math.pow(wind.speed, 2)+2*speed*wind.speed*Math.cos(Math.toRadians(Math.abs(engineDegree-wind.degree))));
+        }
         return resultingSpeed;
     }
 
