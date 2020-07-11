@@ -1,10 +1,18 @@
 package com.dol;
 
+import java.io.IOException;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.*;
+import org.apache.commons.io.*;
+import org.json.JSONObject;
 
 public class Dijkstra {
     Set<Coordinates> A; // мно-во не посещенных вершин
     Set<Coordinates> B; // мно-во посещенных вершин
+    Map<Coordinates, Wind> windMap;
+    int speed;
 
     Map<Coordinates, Double> minWay; // словарь кратчайщих путей
     Map<Coordinates, Coordinates> parentCord;
@@ -13,12 +21,13 @@ public class Dijkstra {
 
     PriorityQueue<Way> priorityQueue;
 
-    public void dijkstra(Coordinates s){
+    public void dijkstra(Coordinates s, int speed){
         A = new HashSet<>();
         B = new HashSet<>();
         minWay = new HashMap<>();
         parentCord = new HashMap<>();
         priorityQueue = new PriorityQueue<>();
+        this.speed = speed;
 
         for (int la = 350; la <= 710; la++) { // вот тут задается карта la - latitude(широта)
             for (int lo = -250; lo <= 500; lo++) { // lo - longitude(долгота)
@@ -86,6 +95,32 @@ public class Dijkstra {
         return null;
     }
 
+    private int[] setTimeOfFlight(Coordinates c) {
+        Coordinates coordinates = new Coordinates(c.getLa()/10, c.getLo()/10);
+        Wind wind = null;
+
+        int[] resultingSpeed = new int[8];
+
+        if ((wind = windMap.get(coordinates)) == null) {
+            String urlS = MessageFormat.format("http://api.worldweatheronline.com/premium/v1/weather.ashx?key=e8f9a75259284658a76173713201007&q={0},{1}&mca=no&tp=1&num_of_days=1&format=json",
+                    coordinates.getLa(), coordinates.getLo());
+            try {
+                JSONObject json = new JSONObject(IOUtils.toString(new URL(urlS), StandardCharsets.UTF_8));
+                JSONObject weatherOnTime = json.getJSONObject("data").getJSONArray("current_condition").getJSONObject(0);
+                wind = new Wind(weatherOnTime.getInt("windspeedKmph"), weatherOnTime.getInt("winddirDegree"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            windMap.put(coordinates, wind);
+        }
+
+//        for (int i = 0; i < 8; i++) {
+//            int shift =
+//            int resDegree =
+//        }
+        return resultingSpeed;
+    }
+
     // НЕ СМОТРИ СЮДА, только если решил развлечься с точностью
     /*
     широта и долгота задается через целые числа, потому что для них куда проще считать хэши и нет коллизий с точностью
@@ -124,5 +159,14 @@ public class Dijkstra {
         return list;
     }
 
+    public class Wind {
+        int speed;
+        int degree;
+
+        public Wind(int speed, int degree) {
+            this.speed = speed;
+            this.degree = degree;
+        }
+    }
 
 }

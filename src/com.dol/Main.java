@@ -17,7 +17,7 @@ public class Main {
            ЧТОБЫ ТЕБЕ НЕ КОМПИЛИТЬ КУЧУ РАЗ, Я ИХ ПОКА РАЗДЕЛИЛ, ТЕБЕ НЕ ОБЯЗАТЕЛЬНО ЮЗАТЬ ВСЕ ВРЕМЯ dijkstra МОЖЕШЬ ОДИН РАЗ ЗАДАТЬ НАЧАЛО, А ПОТОМ ПОЛУЧАТЬ КУЧУ ПУТЕЙ В РАЗНЫЕ ТОЧКЧИ
          */
 
-        dij.dijkstra(from);
+        dij.dijkstra(from, 15);
         LinkedList<Coordinates> LL = dij.getWayFromCoordinates(to);
 
     }
