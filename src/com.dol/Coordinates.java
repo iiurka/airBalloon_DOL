@@ -3,28 +3,28 @@ package com.dol;
 import java.util.Objects;
 
 public class Coordinates {
-    private final int la;
-    private final int lo;
+    private final int lat;
+    private final int lon;
 
-    public Coordinates(int la, int lo) {
-        this.la = la;
-        this.lo = lo;
+    public Coordinates(int lat, int lon) {
+        this.lat = lat;
+        this.lon = lon;
     }
 
-    public int getLa() { return la; }
-    public int getLo() { return lo; }
+    public int getLat() { return lat; }
+    public int getLon() { return lon; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Coordinates that = (Coordinates) o;
-        return la == that.la &&
-                lo == that.lo;
+        return lat == that.lat &&
+                lon == that.lon;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(la, lo);
+        return Objects.hash(lat, lon);
     }
 }
