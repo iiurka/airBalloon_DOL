@@ -33,18 +33,17 @@ public class DijkstraTest {
         Assert.assertEquals(listHor, dijkstraHor.getWayFromCoordinates(new Coordinates(455,252)));
     }
 
-
     @Test
     public void setTimeOfFlight() {
         Dijkstra dijkstra = new Dijkstra();
         dijkstra.windMap = new HashMap<>();
         dijkstra.speed = 10;
-        Coordinates coordinates = new Coordinates(420, 270);
+        Coordinates coordinates = new Coordinates(42, 27);
         Wind wind = new Wind(15, 180);
         dijkstra.windMap.put(coordinates, wind);
-        double[] expected = {0, -11, -7, 0, 0, 16, 26, 0};
+        double[] expected = {-5, 0, 0, 0, 25, 0, 0, 0};
         for (int i = 0; i < 8; i++) {
-            Assert.assertEquals(expected[i], dijkstra.setTimeOfFlight(new Coordinates(425, 277))[i], 1e-6);
+            Assert.assertEquals(expected[i], dijkstra.setTimeOfFlight(new Coordinates(420, 270))[i], 1e-6);
         }
     }
 }
