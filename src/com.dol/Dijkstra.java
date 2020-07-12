@@ -137,7 +137,7 @@ public class Dijkstra {
         double[] resultingSpeed = new double[8];
 
         if ((wind = windMap.get(coordinates)) == null) {
-            String urlS = MessageFormat.format("http://api.worldweatheronline.com/premium/v1/weather.ashx?key=716224505d374e6e98f142540201207&q={0},{1}&mca=no&tp=1&num_of_days=1&format=json",
+            String urlS = MessageFormat.format("http://api.worldweatheronline.com/premium/v1/weather.ashx?key=d3f5faa1c70b493781e161214201207&q={0},{1}&mca=no&tp=1&num_of_days=1&format=json",
                     coordinates.getLat(), coordinates.getLon());
             try {
                 JSONObject json = new JSONObject(IOUtils.toString(new URL(urlS), StandardCharsets.UTF_8));
