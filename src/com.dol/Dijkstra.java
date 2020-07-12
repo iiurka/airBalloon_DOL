@@ -52,7 +52,7 @@ public class Dijkstra {
         }
     }
 
-    public void dijkstra(Coordinates from, Coordinates to, int speed, boolean region){
+    public void dijkstra(Coordinates from, Coordinates to, int speed, boolean region) {
         A = new HashSet<>();
         B = new HashSet<>();
         minWay = new HashMap<>();
@@ -79,7 +79,6 @@ public class Dijkstra {
 
         int direction = -1;
         double [] wind = setTimeOfFlight(s);
-
 
         minWay.replace(s, distance); // Фиксируем найденное минимальное расстояние до точки
         minTime.replace(s, time);
