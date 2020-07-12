@@ -155,31 +155,52 @@ public class ImagePanel extends JPanel
 
 
         Dijkstra algorithm = new Dijkstra();
-        algorithm.dijkstra(from);
+        switch (region) {
+            case BALTIC_SEA ->
+                algorithm.dijkstra(from, to, SpeedControllerWindow.getCurrentSpeed(), true);
+
+            case BLACK_SEA ->
+                algorithm.dijkstra(from, to, SpeedControllerWindow.getCurrentSpeed(), false);
+        }
+
         LinkedList <Coordinates> temp = algorithm.getWayFromCoordinates(to);
+
+        if (temp == null) {
+            JOptionPane.showMessageDialog(frame, "Невозможно добраться до пункта назначения!", "Warning!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        JOptionPane.showMessageDialog(frame, String.format("Distance = %.2f km\nTime = %dh:%dm", algorithm.getDistance(to), (int) algorithm.getTime(to), (int) ((algorithm.getTime(to) - (int) algorithm.getTime(to)) * 60)), "Complete!", JOptionPane.INFORMATION_MESSAGE);
         Coordinates[] result = new Coordinates[temp.size()];
         temp.toArray(result);
 
-        int k = 5;
-        int currLine = 2 + k;
-        boolean toPaint = true;
-
-        for (int i = 2; i < result.length; i++) {
-
-            if (i > currLine) {
-                toPaint = !toPaint;
-                currLine += k;
-            }
-            if (!toPaint) continue;
+        for (int i = 1; i < result.length; i++) {
 
             Coordinates prev = result[i-1];
             Coordinates curr = result[i];
 
-            int prevX = (int) ((prev.getLo() / 10.0 + 25) * widthMap / 75);
-            int prevY = (int) ((71 - prev.getLa() / 10.0) * heightMap / 36);
+            int prevX = (int) ((prev.getLon() / 10.0 + 25) * widthMap / 75);
+            int prevY = (int) ((71 - prev.getLat() / 10.0) * heightMap / 36);
 
-            int currX = (int) ((curr.getLo() / 10.0 + 25) * widthMap / 75);
-            int currY = (int) ((71 - curr.getLa() / 10.0) * heightMap / 36);
+            int currX = (int) ((curr.getLon() / 10.0 + 25) * widthMap / 75);
+            int currY = (int) ((71 - curr.getLat() / 10.0) * heightMap / 36);
+
+            switch (region) {
+
+                case BALTIC_SEA -> {
+                    prevX = (int) ((prev.getLon() / 10.0 - 5.30) * widthMap / 27.20);
+                    prevY = (int) ((66.5 - prev.getLat() / 10.0) * heightMap / 13.5);
+                    currX = (int) ((curr.getLon() / 10.0 - 5.30) * widthMap / 27.20);
+                    currY = (int) ((66.5 - curr.getLat() / 10.0) * heightMap / 13.5);
+                }
+
+                case BLACK_SEA -> {
+                    prevX = (int) ((prev.getLon() / 10.0 - 25.3) * widthMap / 17.9) + 6;
+                    prevY = (int) ((47.7 - prev.getLat() / 10.0) * heightMap / 8.1) - 6;
+                    currX = (int) ((curr.getLon() / 10.0 - 25.3) * widthMap / 17.9) + 6;
+                    currY = (int) ((47.7 - curr.getLat() / 10.0) * heightMap / 8.1) - 6;
+                }
+            }
 
             Graphics2D g = (Graphics2D) getGraphics();
             g.setColor(Color.RED);
