@@ -21,19 +21,22 @@ public class GeoCoordinates {
 
         switch (region) {
 
-            case EUROPE -> {
+            case EUROPE : {
                 longitude = -25 + (double) (x) / width * 75;
                 latitude = 71 + (double) (-y) / height * 36;
+                break;
             }
 
-            case BALTIC_SEA -> {
+            case BALTIC_SEA : {
                 longitude = 5.3 + (double) (x) / width * 27.2;
                 latitude = 66.5 + (double) (-y) / height * 13.5;
+                break;
             }
 
-            case BLACK_SEA -> {
+            case BLACK_SEA : {
                 longitude = 25.3 + (double) (x) / width * 17.9;
                 latitude = 47.7 + (double) (-y) / height * 8.1;
+                break;
             }
         }
     }

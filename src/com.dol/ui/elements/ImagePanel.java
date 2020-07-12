@@ -126,7 +126,6 @@ public class ImagePanel extends JPanel
     public void openSpeedControllerWindow() {
         new SpeedControllerWindow(frame).setVisible(true);
     }
-
     public void setDefaultRegion() {
         A.deletePoint();
         B.deletePoint();
@@ -141,7 +140,9 @@ public class ImagePanel extends JPanel
             JOptionPane.showMessageDialog(frame, "Please select a region!", "Warning!", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
+        clearMap();
+        paintPoint(A);
+        paintPoint(B);
         if (!A.isWorth()) {
             JOptionPane.showMessageDialog(frame, "Please select a departure point!", "Warning!", JOptionPane.WARNING_MESSAGE);
             return;
@@ -157,11 +158,13 @@ public class ImagePanel extends JPanel
 
 
         switch (region) {
-            case BALTIC_SEA ->
+            case BALTIC_SEA :
                 algorithm.dijkstra(from, to, SpeedControllerWindow.getCurrentSpeed(), true);
+                break;
 
-            case BLACK_SEA ->
+            case BLACK_SEA :
                 algorithm.dijkstra(from, to, SpeedControllerWindow.getCurrentSpeed(), false);
+                break;
         }
 
         LinkedList <Coordinates> temp = algorithm.getWayFromCoordinates(to);
@@ -188,18 +191,20 @@ public class ImagePanel extends JPanel
 
             switch (region) {
 
-                case BALTIC_SEA -> {
+                case BALTIC_SEA : {
                     prevX = (int) ((prev.getLon() / 10.0 - 5.30) * widthMap / 27.20);
                     prevY = (int) ((66.5 - prev.getLat() / 10.0) * heightMap / 13.5);
                     currX = (int) ((curr.getLon() / 10.0 - 5.30) * widthMap / 27.20);
                     currY = (int) ((66.5 - curr.getLat() / 10.0) * heightMap / 13.5);
+                    break;
                 }
 
-                case BLACK_SEA -> {
+                case BLACK_SEA : {
                     prevX = (int) ((prev.getLon() / 10.0 - 25.3) * widthMap / 17.9) + 6;
                     prevY = (int) ((47.7 - prev.getLat() / 10.0) * heightMap / 8.1) - 6;
                     currX = (int) ((curr.getLon() / 10.0 - 25.3) * widthMap / 17.9) + 6;
                     currY = (int) ((47.7 - curr.getLat() / 10.0) * heightMap / 8.1) - 6;
+                    break;
                 }
             }
 

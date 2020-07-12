@@ -138,7 +138,7 @@ public class Dijkstra {
         double[] resultingSpeed = new double[8];
 
         if ((wind = windMap.get(coordinates)) == null) {
-            String urlS = MessageFormat.format("http://api.worldweatheronline.com/premium/v1/weather.ashx?key=71089f93556c4b99acf111608201207&q={0},{1}&mca=no&tp=1&num_of_days=1&format=json",
+            String urlS = MessageFormat.format("http://api.worldweatheronline.com/premium/v1/weather.ashx?key=716224505d374e6e98f142540201207&q={0},{1}&mca=no&tp=1&num_of_days=1&format=json",
                     coordinates.getLat(), coordinates.getLon());
             try {
                 JSONObject json = new JSONObject(IOUtils.toString(new URL(urlS), StandardCharsets.UTF_8));
@@ -211,15 +211,4 @@ public class Dijkstra {
     public double getDistance(Coordinates b) {
         return minWay.get(b);
     }
-
-    public static class Wind {
-        int speed;
-        int degree;
-
-        public Wind(int speed, int degree) {
-            this.speed = speed;
-            this.degree = degree;
-        }
-    }
-
 }

@@ -43,7 +43,7 @@ public class DijkstraTest {
         dijkstra.windMap = new HashMap<>();
         dijkstra.speed = 10;
         Coordinates coordinates = new Coordinates(420, 270);
-        Dijkstra.Wind wind = new Dijkstra.Wind(15, 180);
+        Wind wind = new Wind(15, 180);
         dijkstra.windMap.put(coordinates, wind);
         double[] expected = {0, -11, -7, 0, 0, 16, 26, 0};
         for (int i = 0; i < 8; i++) {
