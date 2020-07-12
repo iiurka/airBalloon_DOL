@@ -24,6 +24,10 @@ public class Dijkstra {
 
     boolean region;
 
+    public Dijkstra() {
+        windMap = new HashMap<>();
+    }
+
     private void initRegion() {
         if (region) { // Baltic sea
             for (int lat = 530; lat <= 665; lat++) { // вот тут задается карта la - latitude(широта)
@@ -53,7 +57,6 @@ public class Dijkstra {
         B = new HashSet<>();
         minWay = new HashMap<>();
         minTime = new HashMap<>();
-        windMap = new HashMap<>();
         parentCord = new HashMap<>();
         priorityQueue = new PriorityQueue<>();
         this.speed = speed;
@@ -64,10 +67,6 @@ public class Dijkstra {
 
         while (!priorityQueue.isEmpty()) { // пока есть непосещенные вершины продолжаем крутиться
             Way a = priorityQueue.poll();
-
-            System.out.print(a.getCoordinates().getLat());
-            System.out.print(" ");
-            System.out.println(a.getCoordinates().getLon());
             if (B.contains(a.getCoordinates())) // Если вершина, которая вышла из очереди уже была рассмотренна в множество B, скипаем ее нахуй
                 continue;
             addCoordinates(a.getCoordinates(), a.getDistance(), a.getTime());
@@ -132,14 +131,14 @@ public class Dijkstra {
         return null;
     }
 
-    private double[] setTimeOfFlight(Coordinates c) {
+    protected double[] setTimeOfFlight(Coordinates c) {
         Coordinates coordinates = new Coordinates(c.getLat()/10, c.getLon()/10);
         Wind wind;
 
         double[] resultingSpeed = new double[8];
 
         if ((wind = windMap.get(coordinates)) == null) {
-            String urlS = MessageFormat.format("http://api.worldweatheronline.com/premium/v1/weather.ashx?key=&q={0},{1}&mca=no&tp=1&num_of_days=1&format=json",
+            String urlS = MessageFormat.format("http://api.worldweatheronline.com/premium/v1/weather.ashx?key=71089f93556c4b99acf111608201207&q={0},{1}&mca=no&tp=1&num_of_days=1&format=json",
                     coordinates.getLat(), coordinates.getLon());
             try {
                 JSONObject json = new JSONObject(IOUtils.toString(new URL(urlS), StandardCharsets.UTF_8));
@@ -158,7 +157,7 @@ public class Dijkstra {
         for (int i = 0; i < 8; i++) {
             double windProjection = wind.speed*Math.cos(Math.toRadians(wind.degree + 45 * i));
             double engineProjection = Math.sqrt(Math.pow(speed, 2) - Math.pow(windProjection, 2));
-            resultingSpeed[i] = (engineProjection+wind.speed*Math.sin(Math.toRadians(wind.degree + 45 * i)));
+            resultingSpeed[i] = (int)(engineProjection+wind.speed*Math.sin(Math.toRadians(wind.degree + 45 * i)));
 //            System.out.println(resultingSpeed[i]);
         }
         return resultingSpeed;
@@ -213,7 +212,7 @@ public class Dijkstra {
         return minWay.get(b);
     }
 
-    public class Wind {
+    public static class Wind {
         int speed;
         int degree;
 

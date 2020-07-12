@@ -36,10 +36,12 @@ public class ImagePanel extends JPanel
     private int widthMap;
     private int heightMap;
 
+    Dijkstra algorithm;
     Point A;
     Point B;
 
     public ImagePanel(JFrame frame, ToolBar toolBar, JLabel statusBar) throws FileNotFoundException {
+        algorithm = new Dijkstra();
         this.frame = frame;
 
         toolBar.observer = new ImagePanelObserver(this);
@@ -154,7 +156,6 @@ public class ImagePanel extends JPanel
         Coordinates to = new Coordinates((int) (B.getLatitude() * 10), (int) (B.getLongitude() * 10));
 
 
-        Dijkstra algorithm = new Dijkstra();
         switch (region) {
             case BALTIC_SEA ->
                 algorithm.dijkstra(from, to, SpeedControllerWindow.getCurrentSpeed(), true);
